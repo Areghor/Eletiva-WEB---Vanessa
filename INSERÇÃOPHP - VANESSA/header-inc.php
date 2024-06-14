@@ -10,7 +10,7 @@ session_start();
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Trabalho PHP&MySQL</title>
 </head>
 
@@ -44,8 +44,8 @@ session_start();
                         <a class="nav-link" href="livro.php">Livros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contato.php">Contato</a>
-                    </li>
+                        <a class="nav-link" href="autores.php">Autores</a>
+                    </li> <!-- Adicionado o link para a página 'autores.php' -->
                 </ul>
                 <span class="navbar-text">
                     <?php if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) { ?>
@@ -67,7 +67,7 @@ session_start();
     </header>
     <main>
         <?php
-        if (isset($_GET['msg'])) {
+        if (isset($_GET['msg']) && isset($_GET['msgerror'])) {
             $msg = $_GET['msg'];
             $msgerror = $_GET['msgerror'];
             if ($msg == 'insert success') {
@@ -83,7 +83,7 @@ session_start();
             } else if ($msg == 'delete error') {
                 echo "<div class='alert alert-danger' role='alert'>Falha ao excluir o registro! {$msgerror}</div>";
             }
-        }
+        }        
         ?>
         <p>&nbsp;</p>
     </main>

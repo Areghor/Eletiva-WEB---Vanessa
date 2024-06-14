@@ -1,66 +1,67 @@
 <?php
 require("header-inc.php");
 
-// Check if the user is logged in, if not then redirect him to login page
-if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-	header("location: login.php");
-	exit;
-  }
-  
-/**
- * Update data in a Table
- */
+// Verificar se o usuário está logado, caso contrário redirecionar para a página de login
+if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
+    header("location: login.php");
+    exit;
+}
 
 require_once('connection.php');
 
+// Definindo $row como um array vazio para evitar erros de variável indefinida
+$row = array('idloc' => '', 'locatario' => '', 'nomelivro' => '');
+
 if (isset($_POST['enviar'])) {
+    $idloc = $_POST['idloc'];
+    $locatario = $_POST['locatario'];
+    $nomelivro = $_POST['nomelivro'];
 
-	$idloc = $_POST['idloc'];
-	$locatario = $_POST['locatario'];
-	$nomelivro = $_POST['nomelivro'];
-	$idlivro = $_POST['idlivro'];
+    // Atualizar registro na tabela usando prepared statement
+    $stmt = $conn->prepare("UPDATE livros SET locatario=?, nomelivro=? WHERE idloc=?");
+    $stmt->bind_param("ssi", $locatario, $nomelivro, $idloc);
 
-	// Mysql query to update record in a table
-	$mysql_query = "UPDATE livros SET locatario='{$locatario}', nomelivro='{$nomelivro}', idlivro='{$idlivro}' WHERE idloc={$idloc}";
+    // Executar a atualização
+    if ($stmt->execute()) {
+        $msg = "Atualização bem-sucedida";
+        $msgerror = "";
+    } else {
+        $msg = "Erro na atualização";
+        $msgerror = $stmt->error;
+    }
+    $stmt->close();
 
-	if ($conn->query($mysql_query) === TRUE) {
-		$msg = "update success";
-		$msgerror = "";
-	}
-	else {
-		$msg = "update error";
-		$msgerror = $conn->error;
-	}
-	header("Location: livros.php?msg={$msg}&msgerror={$msgerror}");
+    // Redirecionar para a página de livros com mensagem de sucesso ou erro
+    header("Location: livros.php?msg={$msg}&msgerror={$msgerror}");
 }
 
 if (isset($_GET['idloc'])) {
-	$idloc = $_GET['idloc'];
-	$mysql_query = "SELECT * FROM livros WHERE id={$idloc}";
-	$result = $conn->query($mysql_query);
-	$row = mysqli_fetch_assoc($result);
+    $idloc = $_GET['idloc'];
+    $stmt = $conn->prepare("SELECT * FROM livros WHERE idloc=?");
+    $stmt->bind_param("i", $idloc);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $stmt->close();
 }
 
-// Connection Close
-mysqli_close($conn);	
+mysqli_close($conn);
 ?>
+
 <div class="container">
-	<h2>Livro</h2>
-  	<p>Atualização do livro alocado.</p>
-  	<hr>  	
-	<div class="wrapper">
-		<form method="post">
-			<input type="hidden" name="idloc" value="<?= $row['idloc']; ?>">
-			<label for="locatario">&nbsp;Locátario</label>
-			<input type="text" name="locatario" id="locatario" class="form-control" required value="<?= $row['locatario']; ?>"><br>
-			<label for="nomelivro">&nbsp;Nome do Livro</label>
-			<input type="text" name="nomelivro" id="nomelivro" class="form-control"required value="<?= $row['nomelivro']; ?>"><br>
-			<label for="idlivro">&nbsp;Data de Retirada</label>
-			<input type="text" name="datanasc" id="datanasc" class="form-control" 
-												style="width: 200px;" value="<?= $row['datanasc']; ?>"><br>
-			<input type="submit" name="enviar" value="Atualizar" class="btn btn-primary w100">
-		</form>
-	</div>
+    <h2>Livro</h2>
+    <p>Atualização do livro alocado.</p>
+    <hr>
+    <div class="wrapper">
+        <form method="post">
+            <input type="hidden" name="idloc" value="<?= $row['idloc']; ?>">
+            <label for="locatario">&nbsp;Locatário</label>
+            <input type="text" name="locatario" id="locatario" class="form-control" required value="<?= $row['locatario']; ?>"><br>
+            <label for="nomelivro">&nbsp;Nome do Livro</label>
+            <input type="text" name="nomelivro" id="nomelivro" class="form-control" required value="<?= $row['nomelivro']; ?>"><br>
+            <input type="submit" name="enviar" value="Atualizar" class="btn btn-primary w100">
+        </form>
+    </div>
 </div>
 
 <?php require("footer.php"); ?>

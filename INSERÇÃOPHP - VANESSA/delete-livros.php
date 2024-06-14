@@ -1,26 +1,29 @@
 <?php
+
 session_start();
 
+
 if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+    $idloc = $_GET['id'];
 
     require_once('connection.php');
 
-    $mysql_query = "DELETE FROM contatos WHERE id=$id";
+    $mysql_query = "DELETE FROM livros WHERE idloc=$idloc";
 
     if ($conn->query($mysql_query) === TRUE) {
-        $msg = "Exclusão bem-sucedida.";
+        $msg = "delete success";
         $msgerror = "";
-    } else {
-        $msg = "Erro ao excluir.";
+    }
+    else {
+        $msg =  "delete error";
         $msgerror = $conn->error;
     }
 
-    $conn->close();
+    mysqli_close($conn);
 } else {
-    $msg = "Erro ao excluir.";
-    $msgerror = "O ID não foi informado!";
+    $msg =  "delete error";
+    $msgerror =  "O ID não foi informado!";
 }
 
-header("Location: contatos.php?msg=$msg&msgerror=$msgerror");
+header("Location: livros.php?msg={$msg}&msgerror={$msgerror}");
 ?>

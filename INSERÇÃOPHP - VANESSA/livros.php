@@ -25,8 +25,8 @@ mysqli_close($conn);
       <tr class="table-info" style="text-align:center">
         <th scope="col" style="width: 5%;">#</th>
         <th scope="col">Locátario</th>
-        <th scope="col" style="width: 30%;">Nome do livro</th>
-        <th scope="col" style="width: 15%;">ID do livro</th>
+        <th scope="col" style="width: 30%;">Nome do locatário</th>
+        <th scope="col" style="width: 15%;">ID do locatário</th>
         <th scope="col" style="width: 15%;">Data de Retirada</th>
         <th scope="col" style="width: 20%;">Ação</th>
       </tr>
@@ -40,7 +40,7 @@ mysqli_close($conn);
         <td><?php echo $data['idlivro']; ?></td> 
         <td><?php echo $data['created_at']; ?></td> 
         <td style="text-align:center">
-          <a href="update-livros.php?id=<?php echo $data['idloc']; ?>">
+          <a href="update-livros.php?idloc=<?php echo $data['idloc']; ?>">
             <button type="button" class="btn btn-primary">Editar</button></a>
           <a href="delete-livros.php?id=<?php echo $data['idloc']; ?>">
             <button type="button" class="btn btn-danger">Excluir</button></a>
@@ -50,5 +50,4 @@ mysqli_close($conn);
     </tbody>
   </table>
 </div>
-
 <?php require("footer.php"); ?>

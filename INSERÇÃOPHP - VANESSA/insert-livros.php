@@ -41,8 +41,8 @@ if (isset($_POST['enviar'])) {
 ?>
 
 <div class="container">
-	<h2>Livros</h2>
-  	<p>Cadastro de livros.</p>
+	<h2>Locatário</h2>
+  	<p>Cadastro de Locatário.</p>
   	<hr>  	
 	<div class="wrapper">
 		<form method="post">
